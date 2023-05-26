@@ -1,12 +1,12 @@
 <div>
-  <h1>Cart id {{this._id}}</h1>
-  {{#each cart}}
+  <h1>Cart id {{cartId}}</h1>
+  
+  {{#each productsInCart}}
     <div class="card m-10">
       <div class="card-header">
       </div>
       <div class="card-body">
-        <p class="card-text">{{this.productId}}</p>
-        <p class="card-text">{{this.quantity}}</p>
+        <p class="card-text">{{this}}</p>
       </div>
     </div>
   {{/each}}

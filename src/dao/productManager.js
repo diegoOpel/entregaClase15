@@ -1,5 +1,4 @@
 import fs from "fs";
-import { v4 as uuidv4 } from 'uuid';
 
 class ProductManager {
   constructor(path){
@@ -18,7 +17,6 @@ class ProductManager {
     return new Promise((res,rej)=>{
       if(isInArray === false){
         this.products.push({
-          id: uuidv4(),
           title: title,
           description: description,
           code: code,

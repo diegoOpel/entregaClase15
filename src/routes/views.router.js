@@ -1,9 +1,7 @@
 import express from "express"
 import { productsModel } from "../dao/models/products.model.js"
-import { cartModel } from "../dao/models/cart.model.js";
 //import { productManager } from '../dao/productManager'
 const viewsRouter = express.Router()
-
 
 viewsRouter.get('/', async (req,res)=>{
   const {limit} = req.query
@@ -19,16 +17,18 @@ viewsRouter.get('/', async (req,res)=>{
     console.log("Can't get products with Mongoose"+error)
   }
 });
+
 viewsRouter.get('/:productId', async (req, res)=>{
-  const id = req.params.productId
+  const productId = req.params.productId
   try{
-    let product = await productsModel.findOne({"_id":id}).lean();
+    let product = await productsModel.findById(productId).lean();
     res.status(200).render('index',{titulo:"Producto individual",products: [product]})
   }
   catch(error){
-    console.log("Can't get products with Mongoose"+error)
+    console.log("Can't get products with Mongoose "+error)
   }
 })
+
 viewsRouter.post('/', async (req, res)=>{
   let {title, description, code, price, status, stock, category, thumbnails} = req.body
   if(!title || !description || !price || !stock || !category || !code || !thumbnails || !status){
@@ -68,36 +68,5 @@ viewsRouter.delete('/:productId', async (req,res)=>{
     console.log("Can't put products with Mongoose"+error)
   }
 })
-
-viewsRouter.get('/chat', (req,res)=>{
-  res.status(200).render("chat");
-})
-
-/* viewsRouter.get('cart/:cid', async (req,res)=>{
-  const cartId = req.params.cid
-  try{
-    let cart = cartModel.findById(cartId).lean()
-    res.status(200).render("cart",{titulo: "Cart encontrado", cart: [cart]})
-  }catch(error){
-    console.log("Can't get carts with Mongoose"+error)
-  }
-})
-
-viewsRouter.post('/cart', async (req,res) => {
-  let {products} = req.body
-  console.log(products)
-   products.forEach(product => {
-    if(!product.productId || !product.quantity){
-      return res.status(400).send({status: 'error', error: 'incomplete values'})
-    }
-  }); 
-  try{
-    let cart = cartModel.create(JSON.parse(products))
-    res.status(200).render("cart",{titulo: "Cart agregado", cart: [cart]})
-  }
-  catch(error){
-    console.log("Can't post carts with Mongoose"+error)
-  }
-}) */
 
 export default viewsRouter

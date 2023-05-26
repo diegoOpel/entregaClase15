@@ -5,6 +5,8 @@ import viewsRouter from './routes/views.router.js';
 import {Server} from 'socket.io';
 import mongoose from 'mongoose';
 import { messagesModel } from "./dao/models/messages.model.js"
+import chatRouter from './routes/chat.router.js';
+import cartRouter from './routes/cart.router.js';
 
 const app = express();
 const PORT = 8080
@@ -16,7 +18,9 @@ app.engine('handlebars',handlebars.engine())
 app.set('views',__dirname+"/views")
 app.set('view engine','handlebars')
 app.use(express.static(__dirname+"/public"))
+app.use('/chat',chatRouter)
 app.use("/",viewsRouter)
+app.use("/cart",cartRouter)
 mongoose.connect('mongodb+srv://diegoopel:MA6Csbb7k3MscxhE@cluster0.rccgf6w.mongodb.net/?retryWrites=true&w=majority')
 
 io.on('connection', async socket=>{
@@ -31,7 +35,8 @@ io.on('connection', async socket=>{
   socket.on('message', async data=>{
     let {userMail, message} = data
     try{
-      let messages = await messagesModel.create(userMail, message)
+      await messagesModel.create({userMail, message})
+      let messages = await messagesModel.find().lean()
       io.emit('messageLogs', messages);
     }
     catch(error){

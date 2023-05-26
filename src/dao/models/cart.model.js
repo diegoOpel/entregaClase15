@@ -6,7 +6,6 @@ const productInCartSchema = new mongoose.Schema({
   productId: {
     type: String,
     required: true,
-    unique: true
   },
   quantity: {
     type: Number,
@@ -14,10 +13,7 @@ const productInCartSchema = new mongoose.Schema({
   }
 })
 const cartSchema = new mongoose.Schema({
-  products: {
-    type: [productInCartSchema],
-    required: true
-  }
+  productsInCart: [productInCartSchema]
 })
 
 export const cartModel = mongoose.model(cartCollection,cartSchema)
